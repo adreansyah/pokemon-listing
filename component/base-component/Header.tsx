@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,9 +17,9 @@ const HeaderBar: React.FC<PropsHeaders> = () => {
   const logo: any = require('assets/img/pokemon-3.png')
   const { pathname } = useRouter()
   const router = useRouter()
-  const [isCount, setCount] = React.useState<any>(null)
+  const [isCount, setCount] = useState<any>(null)
   const { context } = useReceivedContext()
-  React.useEffect(() => {
+  useEffect(() => {
     const Counting = getContextStorage({ keyname: "POKE_COUNT" })
     setCount(Counting)
   }, [context])

@@ -1,11 +1,9 @@
-import { Box, Button, Grid, Stack, TextField, Typography } from '@mui/material'
-import { useState, FC } from 'react'
-import { GET_QUERY } from 'configs/pokemon-gql'
+import { Box, Button, CircularProgress, Stack, TextField, Typography } from '@mui/material'
+import { useState, FC, useEffect, useCallback } from 'react'
 import { getContextStorage, useReceivedContext } from '../configs/ReferenceDataContext'
-import { useLazyQuery } from '@apollo/client'
 import dynamic from 'next/dynamic'
 import styles from 'styles/Home.module.css'
-import client from 'configs/pokemon-gql/apollo-client';
+import { useFetchData, useIsMounted } from 'hooks'
 const ListingData = dynamic(() => import('component/main-component/listing-data'))
 const ModalCard = dynamic(() => import('component/base-component/modal-card'))
 const Div = dynamic(() => import('component/base-component/Segment'))
@@ -16,23 +14,7 @@ interface Props {
   first: number
 }
 
-export async function getServerSideProps() {
-  const { data } = await client.clientOtherRender.query({
-    variables: { limit: 20, offset: 1 },
-    query: GET_QUERY,
-  });
-  return {
-    props: {
-      ...data,
-      first: 0
-    }
-  };
-}
-
 const Home: FC<Props> = (props: Props) => {
-  let [fetchPost, { called, loading, data }] = useLazyQuery(GET_QUERY, { ssr: false });
-  const cek = called ? "data?.pokemons" : props.pokemons.results;
-  const ASdata = (cek && data === undefined) ? props.pokemons.results : data.pokemons.results;
   const [ownData, setownData] = useState<Array<any>>([])
   const [nick, setnick] = useState<string>("")
   const [createOwnData] = useState<Array<any>>([])
@@ -46,15 +28,34 @@ const Home: FC<Props> = (props: Props) => {
   })
   const hasMoreData = numbers < 1000;
   const { setContext } = useReceivedContext();
+  const isMounted = useIsMounted()
+  const { fetchPost, loading, data, called } = useFetchData({
+    variables: {
+      limit: numbers,
+      offset: 1
+    }
+  })
+  useEffect(() => {
+    if (isMounted() && data.length === 0) {
+      fetchPost({
+        variables: {
+          limit: numbers,
+          offset: 1
+        }
+      })
+    }
+  }, [isMounted, data.length, numbers, fetchPost])
   const loadMoreNumbers = () => {
-    setNumbers((nums) => nums + ASdata.length);
-    fetchPost({
-      variables: {
-        limit: numbers,
-        offset: 1
-      }
-    })
-  };
+    if (isMounted() && data.length !== 0) {
+      setNumbers((nums) => nums + data.length);
+      fetchPost({
+        variables: {
+          limit: numbers,
+          offset: 1
+        }
+      })
+    }
+  }
   const clickOwned = (list: object) => {
     setownData([list])
   }
@@ -87,16 +88,18 @@ const Home: FC<Props> = (props: Props) => {
       setopen(!open)
     }
   }
+  if (loading && !data.length) return <Div className='pre-loader'><CircularProgress color='warning' size={50} /></Div>
   return (
     <Div className={styles.container}>
-      <ListingData 
-        data={ASdata}
+      <ListingData
+        data={data}
         hasMoreData={hasMoreData}
         loadMoreNumbers={loadMoreNumbers}
         loading={loading}
         setopen={setopen}
         open={open}
         clickOwned={clickOwned}
+        loadOnMount={isMounted()}
       />
       <ModalCard
         open={open}

@@ -11,16 +11,17 @@ interface Props {
     clickOwned: any
     setopen: any
     open: boolean
-    data: []
+    data: Array<any>
+    loadOnMount: boolean
 }
 
-const ListingData: FC<Props> = ({ hasMoreData, loading, loadMoreNumbers, clickOwned, setopen, open, data }: Props) => {
+const ListingData: FC<Props> = ({ hasMoreData, loading, loadMoreNumbers, clickOwned, setopen, open, data, loadOnMount }: Props) => {
     return (
         <InfiniteScroll
             hasMoreData={hasMoreData}
             isLoading={loading}
             onBottomHit={loadMoreNumbers}
-            loadOnMount={true}
+            loadOnMount={loadOnMount}
         >
             <Grid
                 container
