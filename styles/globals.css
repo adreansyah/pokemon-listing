@@ -1,0 +1,97 @@
+html,
+body {
+  background: white;
+  padding-top: 50px;
+  overflow: scroll;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.contain-img {
+  object-fit: contain;
+}
+
+.image-fit-ration {
+  width: 6em;
+  padding: 1px;
+  margin: auto;
+  height: 50px;
+}
+
+.button-modal {
+  padding: 16;
+  background-color: #ffa429;
+  color: white
+}
+
+.range-typograph-title {
+  margin-right: 12px;
+}
+
+.centerLineMessage {
+  margin: 0 auto;
+  max-width: 700px;
+  height: 100px;
+  position: absolute;
+  border-radius: 3px;
+  width: 100%;
+  right: 0;
+  left: 0;
+  bottom: 50%;
+  text-align: center;
+}
+
+.pokedex-title {
+  position: absolute;
+  top: 22px;
+  font-size: 8px;
+  left: -3px;
+}
+
+.flex-triggers {
+  display: "flex";
+}
+
+.meter {
+  height: 8px;
+  position: relative;
+  border-radius: 10px;
+  background: #f3efe6;
+  overflow: hidden;
+  margin: 10px
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+}
+
+.progress {
+  animation: progressBar 3s ease-in-out;
+  animation-fill-mode: both;
+}
+
+.card-effects:hover {
+  box-shadow: 0 0 4em 0px rgba(0, 0, 0, 0.4);
+  transform: scale(1.01);
+}
+
+@keyframes progressBar {
+  0% {
+    width: 0;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
