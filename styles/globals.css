@@ -51,6 +51,19 @@ a {
   text-align: center;
 }
 
+.pre-loader {
+  margin: 0 auto;
+  max-width: 700px;
+  height: 100px;
+  position: absolute;
+  border-radius: 3px;
+  width: 100%;
+  right: 0;
+  left: 0;
+  bottom: 50%;
+  text-align: center;
+}
+
 .pokedex-title {
   position: absolute;
   top: 22px;

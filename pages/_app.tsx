@@ -8,6 +8,8 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { Router, useRouter } from 'next/router';
+import Div from 'component/base-component/Segment';
+import { CircularProgress } from '@mui/material';
 export async function getServerSideProps({ req, res }: {
   req: any,
   res: any
@@ -32,7 +34,6 @@ const DefaultLayout = ({ children, title }: Defaults) => {
     Router.events.on('routeChangeStart', () => setLoading(true));
     Router.events.on('routeChangeComplete', () => setLoading(false));
     Router.events.on('routeChangeError', () => setLoading(false));
-    console.log("object")
     return () => {
       Router.events.off('routeChangeStart', () => setLoading(true));
       Router.events.off('routeChangeComplete', () => setLoading(false));
@@ -47,7 +48,7 @@ const DefaultLayout = ({ children, title }: Defaults) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HeaderBar />
-      {loading ? "LOADING..." : children}
+      {loading ? <Div className='pre-loader'><CircularProgress color='warning' size={50} /></Div> : children}
     </>
   );
 };
@@ -85,7 +86,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     <StyledEngineProvider injectFirst>
       <ApolloProvider client={client.clientOtherRender}>
         <ContextProvider>
-          <HeaderBar />
           <FetchPage>
             <Component {...pageProps} />
           </FetchPage>

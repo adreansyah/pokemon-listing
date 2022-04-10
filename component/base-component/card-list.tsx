@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { Button, CardMedia, CircularProgress, IconButton } from '@mui/material';
+import { Button, CardMedia, CircularProgress } from '@mui/material';
 import { CatchingPokemonOutlined, CatchingPokemonTwoTone } from '@mui/icons-material';
 import Div from './Segment';
 import { useRouter } from 'next/router';
