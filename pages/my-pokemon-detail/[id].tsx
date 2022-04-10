@@ -3,7 +3,7 @@ import { Button, Card, CardContent, CardMedia, Divider, Typography } from "@mui/
 import { GET_DETAIL } from "configs/pokemon-gql";
 import client from "configs/pokemon-gql/apollo-client";
 import dynamic from "next/dynamic";
-const Div = dynamic(() => import('component/Segment'))
+const Div = dynamic(() => import('component/base-component/Segment'))
 
 export async function getServerSideProps(req: any, query: any) {
     const { data } = await client.clientOtherRender.query({
@@ -22,7 +22,6 @@ interface PROPS {
     image: string
 }
 const MyPokemonDetail: FC<PROPS> = (props: PROPS) => {
-
     const { abilities, height, weight, species, stats }: any = props.pokemon
     const getAbilities = [new Set(abilities.map((item: any) => item.ability.name))]
     return (

@@ -6,8 +6,8 @@ import { getContextStorage, useReceivedContext } from "configs/ReferenceDataCont
 import styles from 'styles/Home.module.css'
 import dynamic from "next/dynamic";
 import Link from "next/link";
-const Div = dynamic(() => import('component/Segment'))
-const CardList = dynamic(() => import('component/card-list'))
+const Div = dynamic(() => import('component/base-component/Segment'))
+const CardList = dynamic(() => import('component/base-component/card-list'))
 type PROPSTYPESCARD = {
     classification?: string
     id?: string

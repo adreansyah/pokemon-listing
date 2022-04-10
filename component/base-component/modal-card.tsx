@@ -1,6 +1,7 @@
 import { Backdrop, Fade, Modal } from '@mui/material'
+import dynamic from 'next/dynamic'
 import { FC } from 'react'
-import Div from 'component/Segment'
+const Div = dynamic(() => import('component/base-component/Segment'))
 
 interface PropsModal {
     open: boolean,

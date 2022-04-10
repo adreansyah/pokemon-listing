@@ -1,16 +1,14 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from '@mui/material'
-import { useState, FC, useEffect } from 'react'
+import { useState, FC } from 'react'
 import { GET_QUERY } from 'configs/pokemon-gql'
+import { getContextStorage, useReceivedContext } from '../configs/ReferenceDataContext'
+import { useLazyQuery } from '@apollo/client'
 import dynamic from 'next/dynamic'
 import styles from 'styles/Home.module.css'
 import client from 'configs/pokemon-gql/apollo-client';
-import { getContextStorage, useReceivedContext } from '../configs/ReferenceDataContext'
-import InfiniteScroll from 'component/infinite-scroll'
-import { useLazyQuery } from '@apollo/client'
-const ModalCard = dynamic(() => import('component/modal-card'))
-const Div = dynamic(() => import('component/Segment'))
-const CardList = dynamic(() => import('component/card-list'))
-
+const ListingData = dynamic(() => import('component/main-component/listing-data'))
+const ModalCard = dynamic(() => import('component/base-component/modal-card'))
+const Div = dynamic(() => import('component/base-component/Segment'))
 interface Props {
   pokemons: {
     results: Array<object>
@@ -91,33 +89,15 @@ const Home: FC<Props> = (props: Props) => {
   }
   return (
     <Div className={styles.container}>
-      <InfiniteScroll
+      <ListingData 
+        data={ASdata}
         hasMoreData={hasMoreData}
-        isLoading={loading}
-        onBottomHit={loadMoreNumbers}
-        loadOnMount={true}
-      >
-        <Grid
-          container
-          direction="row"
-          spacing={2}>
-          {
-            ASdata.map((item: any, id: number) => <Grid key={id} item xs={6} sm={6} md={4}>
-              <CardList
-                isLoading={loading}
-                id={item.id}
-                isLink={`/my-pokemon-detail/${item.name}`}
-                name={item.name}
-                image={item.image}
-                classification={item.classification}
-                types={item.types}
-                clickOwned={clickOwned}
-                setopen={() => setopen(!open)}
-              />
-            </Grid>)
-          }
-        </Grid>
-      </InfiniteScroll>
+        loadMoreNumbers={loadMoreNumbers}
+        loading={loading}
+        setopen={setopen}
+        open={open}
+        clickOwned={clickOwned}
+      />
       <ModalCard
         open={open}
         setopen={setopen}

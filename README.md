@@ -41,11 +41,14 @@ pokemon-listing/
   assets/
     img/..img
   component/
-    card-list.tsx
-    Header.tsx
-    infinite-scroll.tsx
-    modal-card.tsx
-    Segment.tsx
+    base-component/
+      card-list.tsx
+      Header.tsx
+      infinite-scroll.tsx
+      modal-card.tsx
+      Segment.tsx
+    main-component/
+      listing-data.tsx
   configs/
     pokemon-gql/
         apollo-client.tsx

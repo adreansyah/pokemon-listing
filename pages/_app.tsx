@@ -4,28 +4,94 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import { ApolloProvider } from "@apollo/client";
 import client from "configs/pokemon-gql/apollo-client";
 import { ContextProvider } from "configs/ReferenceDataContext";
-import Div from 'component/Segment';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-const HeaderBar = dynamic(() => import('component/Header'))
-function MyApp({ Component, pageProps }: AppProps) {
+import { useEffect, useState } from 'react';
+import { Router, useRouter } from 'next/router';
+export async function getServerSideProps({ req, res }: {
+  req: any,
+  res: any
+}) {
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  )
+
+  return {
+    props: {},
+  }
+}
+const HeaderBar = dynamic(() => import('component/base-component/Header'))
+type Defaults = {
+  title: string
+  children: any,
+}
+const DefaultLayout = ({ children, title }: Defaults) => {
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    Router.events.on('routeChangeStart', () => setLoading(true));
+    Router.events.on('routeChangeComplete', () => setLoading(false));
+    Router.events.on('routeChangeError', () => setLoading(false));
+    console.log("object")
+    return () => {
+      Router.events.off('routeChangeStart', () => setLoading(true));
+      Router.events.off('routeChangeComplete', () => setLoading(false));
+      Router.events.off('routeChangeError', () => setLoading(false));
+    };
+  }, []);
   return (
-    <Div>
+    <>
       <Head>
-        <title>Pokemon</title>
+        <title>{title}</title>
         <meta name="description" content="Pokemon Listing" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <StyledEngineProvider injectFirst>
-        <ApolloProvider client={client.clientOtherRender}>
-          <ContextProvider>
-            <HeaderBar counter={0} />
-            <Component {...pageProps} />
-          </ContextProvider>
-        </ApolloProvider>
-      </StyledEngineProvider>
-    </Div>
+      <HeaderBar />
+      {loading ? "LOADING..." : children}
+    </>
+  );
+};
 
+const FetchPage = ({ children }: any) => {
+  const { pathname } = useRouter()
+  const currentPath = pathname.split("/")[1];
+  switch (currentPath) {
+    case "my-pokemon-detail":
+      return (
+        <DefaultLayout title="Pokemon Detail">
+          {children}
+        </DefaultLayout>
+      );
+      break;
+    case "my-pokemon-list":
+      return (
+        <DefaultLayout title="My Pokemon Collection">
+          {children}
+        </DefaultLayout>
+      );
+      break;
+    default:
+      return (
+        <DefaultLayout title="Pokemon Listing">
+          {children}
+        </DefaultLayout>
+      );
+      break;
+  }
+}
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <StyledEngineProvider injectFirst>
+      <ApolloProvider client={client.clientOtherRender}>
+        <ContextProvider>
+          <HeaderBar />
+          <FetchPage>
+            <Component {...pageProps} />
+          </FetchPage>
+        </ContextProvider>
+      </ApolloProvider>
+    </StyledEngineProvider>
   )
 }
 

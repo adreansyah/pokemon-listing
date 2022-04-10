@@ -8,12 +8,13 @@ import { getContextStorage, useReceivedContext } from 'configs/ReferenceDataCont
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import Div from './Segment';
+import dynamic from 'next/dynamic';
+const Div = dynamic(() => import('component/base-component/Segment'))
 interface PropsHeaders {
   counter?: number
 }
 const HeaderBar: React.FC<PropsHeaders> = () => {
-  const logo: any = require('../assets/img/pokemon-3.png')
+  const logo: any = require('assets/img/pokemon-3.png')
   const { pathname } = useRouter()
   const router = useRouter()
   const [isCount, setCount] = React.useState<any>(null)
