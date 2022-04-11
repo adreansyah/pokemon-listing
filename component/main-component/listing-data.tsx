@@ -5,6 +5,7 @@ const InfiniteScroll = dynamic(() => import('component/base-component/infinite-s
 const CardList = dynamic(() => import('component/base-component/card-list'))
 
 interface Props {
+    disabled?: boolean
     loadMoreNumbers: () => void
     loading: boolean
     hasMoreData: boolean
@@ -15,7 +16,7 @@ interface Props {
     loadOnMount: boolean
 }
 
-const ListingData: FC<Props> = ({ hasMoreData, loading, loadMoreNumbers, clickOwned, setopen, open, data, loadOnMount }: Props) => {
+const ListingData: FC<Props> = ({ disabled, hasMoreData, loading, loadMoreNumbers, clickOwned, setopen, open, data, loadOnMount }: Props) => {
     return (
         <InfiniteScroll
             hasMoreData={hasMoreData}
@@ -30,6 +31,7 @@ const ListingData: FC<Props> = ({ hasMoreData, loading, loadMoreNumbers, clickOw
                 {
                     data.map((item: any, id: number) => <Grid key={id} item xs={6} sm={6} md={4}>
                         <CardList
+                            disabled={disabled}
                             isLoading={loading}
                             id={item.id}
                             isLink={`/my-pokemon-detail/${item.name}`}

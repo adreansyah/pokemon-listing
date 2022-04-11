@@ -38,13 +38,16 @@ query pokemon($name:String!) {
       name
       url
     }
+    types{
+      type{
+        name
+      }
+    }
+    moves {
+      move {
+        name
+      }
+    }
   }
 }
 `
-// ability(ability:"overgrow"){
-//   response
-//   status
-//   message
-//   params
-// }
-// }

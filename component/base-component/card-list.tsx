@@ -9,6 +9,7 @@ import Div from './Segment';
 import { useRouter } from 'next/router';
 
 interface PROPSTYPESCARD {
+    disabled?: boolean
     isLoading?: boolean
     classification?: string
     isLink?: string
@@ -40,7 +41,7 @@ const CardList: React.FC<PROPSTYPESCARD> = (props: PROPSTYPESCARD) => {
                                 borderRadius: "100%"
                             }}
                             component="div"
-                        ><CircularProgress color='warning' /> </Typography> 
+                        ><CircularProgress color='warning' /> </Typography>
                         :
                         <CardMedia
                             className='card-effects'
@@ -85,6 +86,7 @@ const CardList: React.FC<PROPSTYPESCARD> = (props: PROPSTYPESCARD) => {
                     }}
                     disableSpacing>
                     <Button
+                        disabled={props.disabled}
                         onClick={() => {
                             props.setopen()
                             props.clickOwned({
@@ -94,13 +96,13 @@ const CardList: React.FC<PROPSTYPESCARD> = (props: PROPSTYPESCARD) => {
                             })
                         }}
                         startIcon={
-                            <CatchingPokemonTwoTone style={{ color: "red" }} />
+                            props.disabled ? <CircularProgress color='warning' size={14}/> : <CatchingPokemonTwoTone style={{ color: "red" }} />
                         }
                         variant="text"
                         size='medium'
                     >
                         <Typography component="p" sx={{ fontSize: "0.6rem", fontWeight: "bold", margin: 0 }} color="text.secondary" gutterBottom>
-                            pick the pokemon
+                            {props.disabled ? "Waiting Catch..." : "Pick the pokemon"}
                         </Typography>
                     </Button>
                 </CardActions>}

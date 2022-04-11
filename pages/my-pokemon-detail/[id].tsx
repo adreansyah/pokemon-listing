@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Button, Card, CardContent, CardMedia, Divider, Typography } from "@mui/material";
+import { Badge, Button, Card, CardContent, CardMedia, Chip, Divider, Grid, Stack, Typography } from "@mui/material";
 import { GET_DETAIL } from "configs/pokemon-gql";
 import client from "configs/pokemon-gql/apollo-client";
 import dynamic from "next/dynamic";
@@ -22,7 +22,7 @@ interface PROPS {
     image: string
 }
 const MyPokemonDetail: FC<PROPS> = (props: PROPS) => {
-    const { abilities, height, weight, species, stats }: any = props.pokemon
+    const { abilities, height, weight, species, stats, types, moves }: any = props.pokemon
     const getAbilities = [new Set(abilities.map((item: any) => item.ability.name))]
     return (
         <Card>
@@ -44,6 +44,25 @@ const MyPokemonDetail: FC<PROPS> = (props: PROPS) => {
             <Typography paddingBottom={2} textAlign={"center"} fontWeight={"bold"} color="gray" component="div">
                 {species.name?.charAt(0).toUpperCase()}{species.name?.slice(1)}
             </Typography>
+            <Divider />
+            <CardContent>
+                <Typography display={"flex"} justifyContent={"unset"} fontWeight={"bold"} color="gray" component="div">
+                    <div>
+                        Types :
+                    </div>
+                    <div>
+                        {
+                            types.map((item: any, idx: number) => <span key={idx} style={{
+                                display: "grid",
+                                paddingLeft: 8,
+                                color: "#0889d1",
+                                fontWeight:400,
+                                fontSize:12
+                            }}>- {item.type.name.toUpperCase()} </span>)
+                        }
+                    </div>
+                </Typography>
+            </CardContent>
             <Divider />
             <CardContent>
                 <Typography fontWeight={"bold"} color="gray" component="div">
@@ -83,6 +102,22 @@ const MyPokemonDetail: FC<PROPS> = (props: PROPS) => {
                         </Div>
                     ))
                 }
+            </CardContent>
+            <CardContent>
+                <Typography fontWeight={"bold"} color="gray" component="div">Moves :</Typography>
+                <Grid
+                    container
+                    direction="row"
+                    spacing={2}>
+                    {
+                        moves.map((item: any, idx: number) => (
+                            <Grid item xs={4} sm={1} md={1} key={idx}>
+                                <Div className="pokemon-badge-moves">{item.move.name}</Div>
+                            </Grid>
+                        ))
+                    }
+
+                </Grid>
             </CardContent>
         </Card>
     )

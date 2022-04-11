@@ -1,9 +1,9 @@
 import { Box, Button, CircularProgress, Stack, TextField, Typography } from '@mui/material'
-import { useState, FC, useEffect, useCallback } from 'react'
+import { useState, FC, useEffect } from 'react'
 import { getContextStorage, useReceivedContext } from '../configs/ReferenceDataContext'
 import dynamic from 'next/dynamic'
 import styles from 'styles/Home.module.css'
-import { useFetchData, useIsMounted } from 'hooks'
+import { useCatchPokemon, useFetchData, useIsMounted } from 'hooks'
 const ListingData = dynamic(() => import('component/main-component/listing-data'))
 const ModalCard = dynamic(() => import('component/base-component/modal-card'))
 const Div = dynamic(() => import('component/base-component/Segment'))
@@ -19,6 +19,7 @@ const Home: FC<Props> = (props: Props) => {
   const [nick, setnick] = useState<string>("")
   const [createOwnData] = useState<Array<any>>([])
   const [open, setopen] = useState<boolean>(false)
+  const [disabled, setdisabled] = useState<boolean>(false)
   const [numbers, setNumbers] = useState<number>(20);
   const [errorFlex, setErrorFlex] = useState<any>({
     isError: false,
@@ -26,10 +27,11 @@ const Home: FC<Props> = (props: Props) => {
     label: false,
     helperText: "",
   })
-  const hasMoreData = numbers < 1000;
+  const { setRate, status, isRate } = useCatchPokemon({ rate: 50 })
   const { setContext } = useReceivedContext();
   const isMounted = useIsMounted()
-  const { fetchPost, loading, data, called } = useFetchData({
+  const hasMoreData = numbers < 1000;
+  const { fetchPost, loading, data } = useFetchData({
     variables: {
       limit: numbers,
       offset: 1
@@ -57,7 +59,14 @@ const Home: FC<Props> = (props: Props) => {
     }
   }
   const clickOwned = (list: object) => {
+    setRate(Math.floor(Math.random() * 100) + 1)
     setownData([list])
+    setopen(false)
+    setdisabled(true)
+    setTimeout(() => {
+      setdisabled(false)
+      setopen(!open)
+    }, 5000)
   }
   const handleChange = (event: any) => {
     const { value } = event.target
@@ -92,6 +101,7 @@ const Home: FC<Props> = (props: Props) => {
   return (
     <Div className={styles.container}>
       <ListingData
+        disabled={disabled}
         data={data}
         hasMoreData={hasMoreData}
         loadMoreNumbers={loadMoreNumbers}
@@ -106,19 +116,22 @@ const Home: FC<Props> = (props: Props) => {
         setopen={setopen}
         Component={
           <Box sx={style}>
-            <Typography marginY={1} id="transition-modal-title" fontSize={18} component="div">
-              Give the pokemon nickname!
-            </Typography>
-            <TextField
+            {status && <Typography marginY={1} id="transition-modal-title" fontSize={14} component="div">
+              Congrats!! give the pokemon nickname!
+            </Typography>}
+            {!status && <Typography textAlign="center" component="div">
+              Failed Catch The Pokemon
+            </Typography>}
+            {status && <TextField
               size='small'
               error={errorFlex.isError}
               onChange={(e) => handleChange(e)}
               fullWidth
               helperText={errorFlex.helperText}
               label={errorFlex.isError ? "Error" : "Nickname"}
-            ></TextField>
+            ></TextField>}
             <Stack paddingY={1} spacing={2} direction="row">
-              <Button onClick={submittedNickName} type='button' fullWidth variant="contained" color='warning'>Submit</Button>
+              {status && <Button onClick={submittedNickName} type='button' fullWidth variant="contained" color='warning'>Submit</Button>}
               <Button onClick={() => {
                 setopen(!open)
                 setErrorFlex(() => ({
@@ -127,7 +140,9 @@ const Home: FC<Props> = (props: Props) => {
                   label: false,
                   helperText: "",
                 }))
-              }} type='button' fullWidth variant="outlined">Cancel</Button>
+              }} type='button' fullWidth variant="outlined">{
+                  status ? "Cancel" : "Try Again, Good Luck"
+                }</Button>
             </Stack>
           </Box>
         }

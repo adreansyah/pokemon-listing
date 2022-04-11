@@ -31,3 +31,17 @@ export const useFetchData = ({ variables }: any) => {
         data: callBackData
     }
 }
+
+export const useCatchPokemon = ({ rate }: { rate: number }) => {
+    const [status, setStatus] = useState<boolean>(false)
+    const [isRate, setRate] = useState<number>(0)
+    useEffect(() => {
+        const value: boolean = isRate >= rate
+        value && setStatus(true)
+    }, [isRate])
+    return {
+        setRate,
+        status,
+        isRate
+    }
+}   
